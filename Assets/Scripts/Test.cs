@@ -9,17 +9,17 @@ public class Test : MonoBehaviour
 
     void Start()
     {
-        grid = new Grid(20, 10, 10f);
+        //grid = new Grid(20, 10, 10f);
 
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        /*if (Input.GetMouseButtonDown(0))
         {
             //Vector2 vec = new Vector2(Input.mousePosition.x, Input.mousePosition.y) ;
             
             //Debug.Log(vec );
-        }
+        }*/
     }
 }

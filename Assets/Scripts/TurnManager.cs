@@ -6,31 +6,42 @@ using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviour
 {
-    [SerializeField] TextMeshPro turnText;
+    [SerializeField] TextMeshProUGUI turnText;
     public string CurrTurn;
+    public string PlayerState;
 
-    public void ChangeTurn(string turn)
+
+    void Start()
     {
-        CurrTurn = turn;
+        CurrTurn = "Player"; //Player, Enemy
+        PlayerState = "Idle"; //Idle, Moving, CheckToken
+        UpdateTurnText();
+    }
+    public void ChangeTurn(bool isFlipflop)
+    {
 
-        switch(turn)
+        if(isFlipflop) //normal combat end turn: Player -> Enemy, vice versa
         {
-            case "Dialog":
-                //stuff
-                break;
-            case "Player":
-                //ss
-                break;
-            case "Enemy":
-                //ssa
-                break;
-            
+            if (CurrTurn == "Player") CurrTurn = "Enemy";
+            else if (CurrTurn == "Enemy") CurrTurn = "Player";
+
+            UpdateTurnText();
+        }
+        else //unusual turn: ally turn, cinematic or something
+        {
             
         }
+        
     }
 
-    void UpdateText()
+    void UpdateTurnText()
     {
         turnText.text = CurrTurn;
+        //Debug.Log("Current State = " + CurrTurn);
+    }
+
+    void GameOver()
+    {
+
     }
 }

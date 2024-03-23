@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Grid
 {
-    private int _width;
+    /*private int _width;
     private int _height;
     private float _cellSize;
     private int[,] gridArray;
@@ -38,5 +38,5 @@ public class Grid
     {
         x = Mathf.FloorToInt(worldPos.x / _cellSize);
         y = Mathf.FloorToInt(worldPos.y / _cellSize);
-    }
+    }*/
 }
