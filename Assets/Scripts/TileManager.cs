@@ -7,10 +7,14 @@ public class TileManager : MonoBehaviour
     private int _rows;
     private int _collumns;
 
+    private GameObject _gameMan;
     private TurnManager _turnMan;
+    private ActionManager _actMan;
 
     [SerializeField] GameObject testTokenPlayer;
-    [SerializeField] float tokenMoveSpeed = 10f;
+    //[SerializeField] float tokenMoveSpeed = 10f;
+
+    private Vector2 positi;
 
     void Start()
     {
@@ -30,7 +34,9 @@ public class TileManager : MonoBehaviour
             }
         }
 
-        _turnMan = GameObject.FindGameObjectWithTag("TurnManager").GetComponent<TurnManager>();
+        _gameMan = GameObject.FindGameObjectWithTag("BattleManager");
+        _turnMan = _gameMan.GetComponent<TurnManager>();
+        _actMan = _gameMan.GetComponent<ActionManager>();
     }
 
     public Tile GetTileAtPos(Vector2 pos)
@@ -57,18 +63,23 @@ public class TileManager : MonoBehaviour
                 tempPosi = new Vector2(-(tempPosi.y - 4), tempPosi.x + 8);
 
                 //Debug.Log("posi, testpos = " + posi + ", " + tempPosi + "||" + (posi == tempPosi));
+                
                 if (posi == tempPosi)
                 {
-                    //turn on possible move highlights
-                    CheckMoveable(posi);
-                    _turnMan.PlayerState = "Moving";
-
-                } 
+                    positi = posi;
+                    _actMan.ShowPanel(true);
+                }
+                
                 break;
 
             case ("Moving"):
                 
-                MoveToken(posi);
+                _actMan.ShowPanel(false);
+                
+                //check if tile is in range
+                _tilesDic.TryGetValue(new Vector2(posi.y, posi.x), out Tile _Tile);
+
+                if (_Tile.IsMoveable) MoveToken(posi);
 
                 //reset moveable tiles
                 for (int x = 0; x < _tilesDic.Count ; x++)
@@ -79,14 +90,17 @@ public class TileManager : MonoBehaviour
                         {
                         _tempTile.SetTileMoveable(false);
                         }
-                
                     }
                 }
+
+                //reset PlayerState
+                _turnMan.PlayerState = "Idle";
+                
                 break;
         } 
     }
 
-    private void CheckMoveable(Vector2 positi)
+    public void CheckMoveable()
     {
         int possibleDistance = 2;// testTokenPlayer.GetComponent<PlayerToken>().MaxActionPoints;
         int possibleTargetX = Mathf.RoundToInt(positi.x); 
@@ -100,11 +114,15 @@ public class TileManager : MonoBehaviour
             {
                 if (_tilesDic.TryGetValue(new Vector2( possibleTargetY + y, possibleTargetX + x), out Tile _tempTile))
                 {
-                    _tempTile.SetTileMoveable(true);
+                    if (!_tempTile.IsOccupied) _tempTile.SetTileMoveable(true);
                 }
                 
             }
         }
+
+        //on with next state and reset positi value
+        _turnMan.PlayerState = "Moving";
+        positi = new Vector2(0,0);
 
     }
 
@@ -119,9 +137,6 @@ public class TileManager : MonoBehaviour
         //smooth movin
         /*moveTarget = new Vector3((posi[1] - 8), (-posi[0] + 4), 0f);
         //StartCoroutine(MoveToken());*/
-
-        //reset PlayerState
-        _turnMan.PlayerState = "Idle";
     }
 
     /*IEnumerator MoveToken()

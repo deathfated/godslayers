@@ -20,7 +20,8 @@ public class Tile : MonoBehaviour
     private GameObject highlightObj;
     private GameObject highlightMove;
     private bool _isPressed;
-    private bool _isMoveable;
+    public bool IsMoveable;
+    public bool IsOccupied;
 
     void Start()
     {
@@ -99,7 +100,7 @@ public class Tile : MonoBehaviour
     public void SetTileMoveable(bool isActive)
     {
         highlightMove.SetActive(isActive);
-        _isMoveable = isActive;
+        IsMoveable = isActive;
     }
 
 }
