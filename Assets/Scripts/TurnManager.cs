@@ -14,7 +14,7 @@ public class TurnManager : MonoBehaviour
     void Start()
     {
         CurrTurn = "Player"; //Player, Enemy
-        PlayerState = "Idle"; //Idle, Moving, CheckToken
+        PlayerState = "Idle"; //Idle, Moving, CheckToken, Attacking
         UpdateTurnText();
     }
     public void ChangeTurn(bool isFlipflop)

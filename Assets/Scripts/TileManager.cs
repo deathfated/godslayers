@@ -12,6 +12,7 @@ public class TileManager : MonoBehaviour
     private ActionManager _actMan;
 
     [SerializeField] GameObject testTokenPlayer;
+    [SerializeField] GameObject testTokenEnemy;
     //[SerializeField] float tokenMoveSpeed = 10f;
 
     private Vector2 positi;
@@ -97,12 +98,60 @@ public class TileManager : MonoBehaviour
                 _turnMan.PlayerState = "Idle";
                 
                 break;
+
+            case ("Attacking"):
+
+                _actMan.ShowPanel(false);
+
+                //check if tile is in range
+                _tilesDic.TryGetValue(new Vector2(posi.y, posi.x), out Tile _TileA);
+
+                //check if click on enemy tile
+                Vector2 tempPos = testTokenEnemy.transform.position;
+                tempPos = new Vector2(-(tempPos.y - 4), tempPos.x + 8);
+
+                if(_TileA.IsAttackable && tempPos == posi) 
+                {
+                    
+                    //testTokenPlayer.GetComponent<PlayerToken>().
+                    int dmg = 3;
+                    testTokenEnemy.GetComponent<EnemyToken>().OnHpReduced(dmg);
+                    //Debug.Log("Attacking for "+ dmg +" damage!");
+                    
+                }
+
+                //reset attackable tiles
+                for (int x = 0; x < _tilesDic.Count ; x++)
+                {
+                    for (int y = 0; y < _tilesDic.Count ; y++)
+                    {
+                        if (_tilesDic.TryGetValue(new Vector2(x, y), out Tile _tempTile))
+                        {
+                        _tempTile.SetTileAttackable(false);
+                        }
+                    }
+                }
+
+                //reset PlayerState
+                _turnMan.PlayerState = "Idle";
+
+                break;
         } 
     }
 
-    public void CheckMoveable()
+    public void CheckActionable(string actionType)
     {
-        int possibleDistance = 2;// testTokenPlayer.GetComponent<PlayerToken>().MaxActionPoints;
+        int possibleDistance = 1;// testTokenPlayer.GetComponent<PlayerToken>().MaxActionPoints;
+        switch(actionType)
+        {
+            case ("move"):
+                possibleDistance = 2;
+                break;
+            case ("attack"):
+                possibleDistance = 1;
+                break;
+        }
+        
         int possibleTargetX = Mathf.RoundToInt(positi.x); 
         int possibleTargetY = Mathf.RoundToInt(positi.y); 
         Debug.Log("posDis : " + possibleDistance + " , posX : " + possibleTargetX + " , posY : " + possibleTargetY);
@@ -114,14 +163,28 @@ public class TileManager : MonoBehaviour
             {
                 if (_tilesDic.TryGetValue(new Vector2( possibleTargetY + y, possibleTargetX + x), out Tile _tempTile))
                 {
-                    if (!_tempTile.IsOccupied) _tempTile.SetTileMoveable(true);
+                    switch(actionType)
+                    {
+                        case ("move"):
+                            _tempTile.SetHighlightColor(actionType);
+                            if (!_tempTile.IsOccupied) _tempTile.SetTileMoveable(true);
+
+                            _turnMan.PlayerState = "Moving";
+                            break;
+                        case ("attack"):
+                            _tempTile.SetHighlightColor(actionType);
+                            _tempTile.SetTileAttackable(true);
+
+                            _turnMan.PlayerState = "Attacking";
+                            break;
+                    }
+                    
                 }
                 
             }
         }
 
-        //on with next state and reset positi value
-        _turnMan.PlayerState = "Moving";
+        //reset positi value
         positi = new Vector2(0,0);
 
     }

@@ -19,8 +19,9 @@ public class ActionManager : MonoBehaviour
         _tileMan = GameObject.FindGameObjectWithTag("TileManager").GetComponent<TileManager>();
     }
 
-    public void MoveIsPressed()
+    public void ActionIsPressed(string action)
     {
-        _tileMan.CheckMoveable();
+        _tileMan.CheckActionable(action);
+
     }
 }

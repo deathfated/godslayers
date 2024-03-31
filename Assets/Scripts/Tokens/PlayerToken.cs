@@ -1,5 +1,7 @@
 
 
+using System.Diagnostics;
+
 public class PlayerToken : Token
 {
 
@@ -23,6 +25,7 @@ public class PlayerToken : Token
 
     protected override void OnDeath()
     {
+        base.OnDeath();
 
     }
 }

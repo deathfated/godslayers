@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 2084507345414830394}
   - component: {fileID: 7058504008293936462}
   m_Layer: 0
-  m_Name: HighlightMove
+  m_Name: HighlightAction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -271,6 +271,8 @@ MonoBehaviour:
   tilePressed:
     m_PersistentCalls:
       m_Calls: []
+  IsMoveable: 0
+  IsOccupied: 0
 --- !u!61 &7989215190774603963
 BoxCollider2D:
   m_ObjectHideFlags: 0

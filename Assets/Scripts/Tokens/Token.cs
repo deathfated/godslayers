@@ -21,16 +21,18 @@ public abstract class Token : MonoBehaviour
         StartingPosition = new Vector3(0,0,0);
     }
 
-    protected virtual void OnHpReduced(int damage)
+    public virtual void OnHpReduced(int damage)
     {
         currHp -= damage;
         //update UIs
+        Debug.Log(this.name + " takes " + damage +" damage!");
 
         if (currHp <= 0) OnDeath();
     }
 
     protected virtual void OnDeath()
     {
-
+        Debug.Log("RIP "+ this.name);
+        this.gameObject.SetActive(false);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 //public struct TileData
 //{
@@ -18,15 +19,23 @@ public class Tile : MonoBehaviour
     public TilePressed tilePressed; 
 
     private GameObject highlightObj;
-    private GameObject highlightMove;
+    private GameObject highlightAction;
+    
+    private Color moveColor, attackColor;
+    
     private bool _isPressed;
     public bool IsMoveable;
+    public bool IsAttackable;
     public bool IsOccupied;
+
 
     void Start()
     {
         highlightObj = transform.GetChild(0).gameObject;
-        highlightMove = transform.GetChild(1).gameObject;
+        highlightAction = transform.GetChild(1).gameObject;
+
+        moveColor = new Color(0, 0, 1, 0.5f);
+        attackColor = new Color(1, 0, 0, 0.5f);
 
         tilePressed.AddListener(gameObject.GetComponentInParent<TileManager>().TilePressed);
     }
@@ -99,8 +108,27 @@ public class Tile : MonoBehaviour
 
     public void SetTileMoveable(bool isActive)
     {
-        highlightMove.SetActive(isActive);
+        highlightAction.SetActive(isActive);
         IsMoveable = isActive;
+    }
+
+    public void SetTileAttackable(bool isActive)
+    {
+        highlightAction.SetActive(isActive);
+        IsAttackable = isActive;
+    }
+
+    public void SetHighlightColor(string actionType)
+    {
+        switch(actionType)
+        {
+            case ("move"):
+                highlightAction.GetComponent<SpriteRenderer>().color = moveColor;
+                break;
+            case ("attack"):
+                highlightAction.GetComponent<SpriteRenderer>().color = attackColor;
+                break;
+        }
     }
 
 }
