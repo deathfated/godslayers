@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
 
 public abstract class Token : MonoBehaviour
 {
     public int MaxActionPoints;
-    [SerializeField] protected int maxHp;
-    [SerializeField] protected int currHp;
+    public int maxHp;
+    public int currHp;
     protected bool isDamageable;
+    public Sprite charaSprite;
 
     [SerializeField] protected Vector3 StartingPosition;
 

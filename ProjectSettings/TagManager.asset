@@ -6,6 +6,8 @@ TagManager:
   tags:
   - BattleManager
   - TileManager
+  - PlayerToken
+  - EnemyToken
   layers:
   - Default
   - TransparentFX

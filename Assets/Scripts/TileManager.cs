@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ public class TileManager : MonoBehaviour
 
     [SerializeField] GameObject testTokenPlayer;
     [SerializeField] GameObject testTokenEnemy;
-    //[SerializeField] float tokenMoveSpeed = 10f;
+    [SerializeField] float tokenMoveSpeed = 10f;
 
     private Vector2 positi;
 
@@ -54,6 +55,8 @@ public class TileManager : MonoBehaviour
     {
         
         if (_turnMan.CurrTurn != "Player") return;
+
+        _actMan.ShowEnemyPanel(false);
         
         switch (_turnMan.PlayerState)
         {
@@ -62,8 +65,6 @@ public class TileManager : MonoBehaviour
                 //check if click on player tile
                 Vector2 tempPosi = testTokenPlayer.transform.position;
                 tempPosi = new Vector2(-(tempPosi.y - 4), tempPosi.x + 8);
-
-                //Debug.Log("posi, testpos = " + posi + ", " + tempPosi + "||" + (posi == tempPosi));
                 
                 if (posi == tempPosi)
                 {
@@ -71,6 +72,16 @@ public class TileManager : MonoBehaviour
                     _actMan.ShowPanel(true);
                 }
                 
+                //check if click on enemy tile
+                Vector2 tempEnemy = testTokenEnemy.transform.position;
+                tempEnemy = new Vector2(-(tempEnemy.y - 4), tempEnemy.x + 8);
+
+                if (posi == tempEnemy)
+                {
+                    //positi = posi;
+                    _actMan.ShowEnemyPanel(true);
+                }
+
                 break;
 
             case ("Moving"):
@@ -195,24 +206,23 @@ public class TileManager : MonoBehaviour
 
         //test move token to new pos
         Vector3 targetPos = new Vector3((posit[1] - 8), (-posit[0] + 4), 0f);
-        testTokenPlayer.transform.position = targetPos; //object name is flipped with actual unity's x y 
+        //testTokenPlayer.transform.position = targetPos; //object name is flipped with actual unity's x y 
 
         //smooth movin
-        /*moveTarget = new Vector3((posi[1] - 8), (-posi[0] + 4), 0f);
-        //StartCoroutine(MoveToken());*/
+        StartCoroutine(MoveTokenSmooth(targetPos));
     }
 
-    /*IEnumerator MoveToken()
+    IEnumerator MoveTokenSmooth(Vector3 targetpos)
     {
-        while(testTokenPlayer.transform.position != moveTarget)
+        while(testTokenPlayer.transform.position != targetpos)
             {
                 testTokenPlayer.transform.position = Vector2.MoveTowards(
                     testTokenPlayer.transform.position,
-                    moveTarget,
+                    targetpos,
                     tokenMoveSpeed * Time.deltaTime);
                 yield return 0;
             }
-            testTokenPlayer.transform.position = moveTarget;
+            testTokenPlayer.transform.position = targetpos;
 
-    }*/
+    }
 }
