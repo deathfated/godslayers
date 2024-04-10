@@ -66,7 +66,7 @@ public class TileManager : MonoBehaviour
                 Vector2 tempPosi = testTokenPlayer.transform.position;
                 tempPosi = new Vector2(-(tempPosi.y - 4), tempPosi.x + 8);
                 
-                if (posi == tempPosi)
+                if (posi == tempPosi && testTokenPlayer.activeSelf)
                 {
                     positi = posi;
                     _actMan.ShowPanel(true);
@@ -76,7 +76,7 @@ public class TileManager : MonoBehaviour
                 Vector2 tempEnemy = testTokenEnemy.transform.position;
                 tempEnemy = new Vector2(-(tempEnemy.y - 4), tempEnemy.x + 8);
 
-                if (posi == tempEnemy)
+                if (posi == tempEnemy && testTokenEnemy.activeSelf)
                 {
                     //positi = posi;
                     _actMan.ShowEnemyPanel(true);
@@ -121,7 +121,7 @@ public class TileManager : MonoBehaviour
                 Vector2 tempPos = testTokenEnemy.transform.position;
                 tempPos = new Vector2(-(tempPos.y - 4), tempPos.x + 8);
 
-                if(_TileA.IsAttackable && tempPos == posi) 
+                if(_TileA.IsAttackable && tempPos == posi && testTokenEnemy.activeSelf) 
                 {
                     
                     //testTokenPlayer.GetComponent<PlayerToken>().
