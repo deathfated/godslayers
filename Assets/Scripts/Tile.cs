@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 //public struct TileData
@@ -11,7 +12,7 @@ using UnityEngine.UI;
 //    GameObject occupier;
 //}
 
-public class Tile : MonoBehaviour
+public class Tile : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
 {
 
     [Serializable]
@@ -40,17 +41,32 @@ public class Tile : MonoBehaviour
         tilePressed.AddListener(gameObject.GetComponentInParent<TileManager>().TilePressed);
     }
 
-    void OnMouseEnter()
+    public void SetTileMoveable(bool isActive)
     {
-        highlightObj.SetActive(true);
+        highlightAction.SetActive(isActive);
+        IsMoveable = isActive;
     }
 
-    void OnMouseExit()
+    public void SetTileAttackable(bool isActive)
     {
-        highlightObj.SetActive(false);
+        highlightAction.SetActive(isActive);
+        IsAttackable = isActive;
     }
 
-    void OnMouseDown()
+    public void SetHighlightColor(string actionType)
+    {
+        switch(actionType)
+        {
+            case ("move"):
+                highlightAction.GetComponent<SpriteRenderer>().color = moveColor;
+                break;
+            case ("attack"):
+                highlightAction.GetComponent<SpriteRenderer>().color = attackColor;
+                break;
+        }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
     {
         _isPressed = true;
         Debug.Log(this.name + " is now pressed");
@@ -81,22 +97,11 @@ public class Tile : MonoBehaviour
 
         }
 
-        //for (int x = 0; x < tempArr.Length ; x++)  //checking each split in array
-        //{
-        //    Debug.Log("temp Arr " + x + " : " + tempArr[x]);
-        //}
-
-        //Debug.Log("Current Tile pos : row " + row + " : column " + col );   //checking row and col integers
-
         tempPos = new Vector2(row,col);
         tilePressed.Invoke(tempPos);
-
-        //call event to highlight possible movement
-
-
     }
 
-    void OnMouseUp()
+    public void OnPointerUp(PointerEventData eventData)
     {
         if (_isPressed)
         {
@@ -106,29 +111,13 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public void SetTileMoveable(bool isActive)
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        highlightAction.SetActive(isActive);
-        IsMoveable = isActive;
+        highlightObj.SetActive(true);
     }
 
-    public void SetTileAttackable(bool isActive)
+    public void OnPointerExit(PointerEventData eventData)
     {
-        highlightAction.SetActive(isActive);
-        IsAttackable = isActive;
+        highlightObj.SetActive(false);
     }
-
-    public void SetHighlightColor(string actionType)
-    {
-        switch(actionType)
-        {
-            case ("move"):
-                highlightAction.GetComponent<SpriteRenderer>().color = moveColor;
-                break;
-            case ("attack"):
-                highlightAction.GetComponent<SpriteRenderer>().color = attackColor;
-                break;
-        }
-    }
-
 }

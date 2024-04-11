@@ -18,6 +18,7 @@ public class ActionManager : MonoBehaviour
 
         _charaSprite.GetComponent<RawImage>().texture = TokenManager.instance.GetTokenSprite(0).texture;
         _charaSprite.SetActive(isShow);
+        SetCharaOpacity(true);
 
         _statsPanel.SetActive(false);
     }
@@ -61,5 +62,10 @@ public class ActionManager : MonoBehaviour
 
     }
 
-
+    public void SetCharaOpacity(bool isTransparent)
+    {
+        Debug.Log("opac "+ isTransparent);
+        if (!isTransparent) _charaSprite.GetComponent<RawImage>().color = new Color(1, 1, 1, 0.25f);
+        else                _charaSprite.GetComponent<RawImage>().color = new Color(1, 1, 1, 1);
+    }
 }
