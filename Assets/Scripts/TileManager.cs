@@ -13,7 +13,9 @@ public class TileManager : MonoBehaviour
     private ActionManager _actMan;
 
     [SerializeField] GameObject testTokenPlayer;
+    //[SerializeField] PlayerTokens
     [SerializeField] GameObject testTokenEnemy;
+    [SerializeField] GameObject testTokenMisc;
     [SerializeField] float tokenMoveSpeed = 10f;
 
     private Vector2 positi;
@@ -78,7 +80,6 @@ public class TileManager : MonoBehaviour
 
                 if (posi == tempEnemy && testTokenEnemy.activeSelf)
                 {
-                    //positi = posi;
                     _actMan.ShowEnemyPanel(true);
                 }
 
@@ -92,6 +93,21 @@ public class TileManager : MonoBehaviour
                 _tilesDic.TryGetValue(new Vector2(posi.y, posi.x), out Tile _Tile);
 
                 if (_Tile.IsMoveable) MoveToken(posi);
+
+                //check if target tile is on a damaging Misc
+                MiscToken tempMisc = testTokenMisc.GetComponent<MiscToken>();
+                if (tempMisc.isDamaging)
+                {
+                    Vector2 tempObst = testTokenMisc.transform.position;
+                    tempObst = new Vector2(-(tempObst.y - 4), tempObst.x + 8);
+
+                    if (posi == tempObst)
+                    {
+                        //do damage to player
+                        testTokenPlayer.GetComponent<PlayerToken>().OnHpReduced(tempMisc.damage);
+
+                    }
+                }
 
                 //reset moveable tiles
                 for (int x = 0; x < _tilesDic.Count ; x++)

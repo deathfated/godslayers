@@ -15,9 +15,9 @@ public abstract class Token : MonoBehaviour
 
     protected virtual void Init()
     {
-        MaxActionPoints = 0;
-        maxHp = 1;
-        currHp = 1;
+        if (MaxActionPoints == 0) MaxActionPoints = 1;
+        if (maxHp == 0) maxHp = 1;
+        if (currHp == 0) currHp = 1;
         isDamageable = false;
 
         StartingPosition = new Vector3(0,0,0);

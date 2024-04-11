@@ -1,8 +1,10 @@
 
 
-public class ObstacleToken : Token
+public class MiscToken : Token
 {
-    
+    public bool isDamaging;
+    public int damage;
+
     void Start()
     {
         Init();

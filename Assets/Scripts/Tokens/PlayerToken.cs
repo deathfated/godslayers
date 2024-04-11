@@ -1,7 +1,4 @@
 
-
-using System.Diagnostics;
-
 public class PlayerToken : Token
 {
 
@@ -14,9 +11,9 @@ public class PlayerToken : Token
     {
         base.Init();
 
-        MaxActionPoints = 5;
-        maxHp = 10;
-        currHp = maxHp;
+        //MaxActionPoints = 5;
+        //maxHp = 10;
+        //currHp = maxHp;
         isDamageable = true;
 
         StartingPosition = transform.position;
