@@ -13,6 +13,7 @@ public class TokenManager : MonoBehaviour
     
     public BattleTokens[] playerTokens;
     public BattleTokens[] enemyTokens;
+    public MiscToken[] miscTokens;
 
     public Sprite GetTokenSprite(int index)
     {
@@ -47,6 +48,7 @@ public class TokenManager : MonoBehaviour
 
     void Start()
     {
+        //get player stats from party data instance
         for (int i = 0 ; i < playerTokens.Length ; i++)
         {
             playerTokens[i].Name = PlayerPartyManager.instance.pTokens[i].Name;

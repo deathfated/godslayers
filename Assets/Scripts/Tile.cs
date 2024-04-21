@@ -78,7 +78,7 @@ public class Tile : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoin
             int.TryParse(tempArr[1], out col);
 
         }
-        else //is the first tile in the Row so its number "0"
+        else //is the first tile in the Row thus its number is "0"
         {
             tempstring = this.name.Replace("Tile","popo,").Replace(" ","");
             tempArr = tempstring.Split(",");

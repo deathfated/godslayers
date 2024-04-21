@@ -13,13 +13,10 @@ public class TileManager : MonoBehaviour
     private ActionManager _actMan;
     private TokenManager _tokenMan;
 
-    //[SerializeField] GameObject testTokenPlayer;
     private PlayerToken _currentActivePlayer;
     [SerializeField] TokenManager.BattleTokens[] PlayerTokens;
-    [SerializeField] GameObject testTokenEnemy;
-    [SerializeField] GameObject[] EnemyTokens;
-    [SerializeField] GameObject testTokenMisc;
-    [SerializeField] GameObject[] MiscTokens;
+    [SerializeField] TokenManager.BattleTokens[] EnemyTokens;
+    [SerializeField] MiscToken[] MiscTokens;
     [SerializeField] float tokenMoveSpeed = 10f;
 
     private Vector2 positi;
@@ -48,6 +45,8 @@ public class TileManager : MonoBehaviour
         _tokenMan = _gameMan.GetComponent<TokenManager>();
 
         PlayerTokens = _tokenMan.playerTokens;
+        EnemyTokens = _tokenMan.enemyTokens;
+        MiscTokens = _tokenMan.miscTokens;
     }
 
     public Tile GetTileAtPos(Vector2 pos)
@@ -72,8 +71,6 @@ public class TileManager : MonoBehaviour
             case ("Idle"):
                 
                 //check if click on player tile
-
-                //Vector2 tempPosi = testTokenPlayer.transform.position;
                 for (int i = 0; i < PlayerTokens.Length; i++)
                 {
                     Vector2 tempPosi = PlayerTokens[i].Type.gameObject.transform.position;
@@ -88,12 +85,15 @@ public class TileManager : MonoBehaviour
                 }
                 
                 //check if click on enemy tile
-                Vector2 tempEnemy = testTokenEnemy.transform.position;
-                tempEnemy = new Vector2(-(tempEnemy.y - 4), tempEnemy.x + 8);
-
-                if (posi == tempEnemy && testTokenEnemy.activeSelf)
+                for(int n = 0; n < EnemyTokens.Length; n++)
                 {
-                    _actMan.ShowEnemyPanel(true);
+                    Vector2 tempEnemy = EnemyTokens[n].Type.gameObject.transform.position;
+                    tempEnemy = new Vector2(-(tempEnemy.y - 4), tempEnemy.x + 8);
+
+                    if (posi == tempEnemy && EnemyTokens[n].Type.gameObject.activeSelf)
+                    {
+                        _actMan.ShowEnemyPanel(true);
+                    }
                 }
 
                 break;
@@ -104,21 +104,36 @@ public class TileManager : MonoBehaviour
                 
                 //check if tile is in range
                 _tilesDic.TryGetValue(new Vector2(posi.y, posi.x), out Tile _Tile);
+                if (_Tile.IsMoveable) 
+                {
+                    //reset tile occupation, move, then set new occupation
+                    _tilesDic.TryGetValue(new Vector2(_currentActivePlayer.transform.position.x + 8,
+                                            -(_currentActivePlayer.transform.position.y - 4)), out Tile _lastTile);
 
-                if (_Tile.IsMoveable) MoveToken(posi);
+                    _lastTile.IsOccupied = false;
+                    MoveToken(posi);
+                    _Tile.IsOccupied = true;
+
+                    //_lastTile.gameObject.SetActive(false); -> kinda fun potential mechanic.. collapsing tiles when move away
+                }
 
                 //check if target tile is on a damaging Misc
-                MiscToken tempMisc = testTokenMisc.GetComponent<MiscToken>();
-                if (tempMisc.isDamaging)
+                
+                //MiscToken tempMisc = testTokenMisc.GetComponent<MiscToken>();
+                
+                for(int t = 0; t < MiscTokens.Length; t++ )
                 {
-                    Vector2 tempObst = testTokenMisc.transform.position;
-                    tempObst = new Vector2(-(tempObst.y - 4), tempObst.x + 8);
-
-                    if (posi == tempObst)
+                    if (MiscTokens[t].isDamaging)
                     {
-                        //do damage to player
-                        _currentActivePlayer.OnHpReduced(tempMisc.damage);
+                        Vector2 tempObst = MiscTokens[t].transform.position;
+                        tempObst = new Vector2(-(tempObst.y - 4), tempObst.x + 8);
 
+                        if (posi == tempObst)
+                        {
+                            //do damage to player
+                            _currentActivePlayer.OnHpReduced(MiscTokens[t].damage);
+
+                        }
                     }
                 }
 
@@ -147,17 +162,18 @@ public class TileManager : MonoBehaviour
                 _tilesDic.TryGetValue(new Vector2(posi.y, posi.x), out Tile _TileA);
 
                 //check if click on enemy tile
-                Vector2 tempPos = testTokenEnemy.transform.position;
-                tempPos = new Vector2(-(tempPos.y - 4), tempPos.x + 8);
-
-                if(_TileA.IsAttackable && tempPos == posi && testTokenEnemy.activeSelf) 
+                for(int n = 0; n < EnemyTokens.Length; n++)
                 {
-                    
-                    //testTokenPlayer.GetComponent<PlayerToken>().
-                    int dmg = 3;
-                    testTokenEnemy.GetComponent<EnemyToken>().OnHpReduced(dmg);
-                    //Debug.Log("Attacking for "+ dmg +" damage!");
-                    
+                    Vector2 tempEnemy = EnemyTokens[n].Type.gameObject.transform.position;
+                    tempEnemy = new Vector2(-(tempEnemy.y - 4), tempEnemy.x + 8);
+
+                    if(_TileA.IsAttackable && tempEnemy == posi && EnemyTokens[n].Type.gameObject.activeSelf) 
+                    {
+                        //testTokenPlayer.GetComponent<PlayerToken>().
+                        int dmg = 3;
+                        EnemyTokens[n].Type.OnHpReduced(dmg);
+                        Debug.Log(EnemyTokens[n].Name + " takes "+ dmg +" damage!");
+                    }
                 }
 
                 //reset attackable tiles
@@ -181,14 +197,17 @@ public class TileManager : MonoBehaviour
 
     public void CheckActionable(string actionType)
     {
-        int possibleDistance = 1;// testTokenPlayer.GetComponent<PlayerToken>().MaxActionPoints;
+        int possibleDistance;
         switch(actionType)
         {
             case ("move"):
-                possibleDistance = 2;
+                possibleDistance = _currentActivePlayer.MaxActionPoints; //2;
                 break;
             case ("attack"):
-                possibleDistance = 1;
+                possibleDistance = 1; 
+                break;
+            default:
+                possibleDistance = 0;
                 break;
         }
         
@@ -211,16 +230,19 @@ public class TileManager : MonoBehaviour
 
                             _turnMan.PlayerState = "Moving";
                             break;
+
                         case ("attack"):
                             _tempTile.SetHighlightColor(actionType);
                             _tempTile.SetTileAttackable(true);
 
                             _turnMan.PlayerState = "Attacking";
                             break;
+
+                        default:
+                            Debug.LogError("action type value invalid!");
+                            break;
                     }
-                    
                 }
-                
             }
         }
 
