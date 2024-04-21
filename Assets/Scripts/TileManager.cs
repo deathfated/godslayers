@@ -11,11 +11,15 @@ public class TileManager : MonoBehaviour
     private GameObject _gameMan;
     private TurnManager _turnMan;
     private ActionManager _actMan;
+    private TokenManager _tokenMan;
 
-    [SerializeField] GameObject testTokenPlayer;
-    //[SerializeField] PlayerTokens
+    //[SerializeField] GameObject testTokenPlayer;
+    private PlayerToken _currentActivePlayer;
+    [SerializeField] TokenManager.BattleTokens[] PlayerTokens;
     [SerializeField] GameObject testTokenEnemy;
+    [SerializeField] GameObject[] EnemyTokens;
     [SerializeField] GameObject testTokenMisc;
+    [SerializeField] GameObject[] MiscTokens;
     [SerializeField] float tokenMoveSpeed = 10f;
 
     private Vector2 positi;
@@ -41,6 +45,9 @@ public class TileManager : MonoBehaviour
         _gameMan = GameObject.FindGameObjectWithTag("BattleManager");
         _turnMan = _gameMan.GetComponent<TurnManager>();
         _actMan = _gameMan.GetComponent<ActionManager>();
+        _tokenMan = _gameMan.GetComponent<TokenManager>();
+
+        PlayerTokens = _tokenMan.playerTokens;
     }
 
     public Tile GetTileAtPos(Vector2 pos)
@@ -65,13 +72,19 @@ public class TileManager : MonoBehaviour
             case ("Idle"):
                 
                 //check if click on player tile
-                Vector2 tempPosi = testTokenPlayer.transform.position;
-                tempPosi = new Vector2(-(tempPosi.y - 4), tempPosi.x + 8);
-                
-                if (posi == tempPosi && testTokenPlayer.activeSelf)
+
+                //Vector2 tempPosi = testTokenPlayer.transform.position;
+                for (int i = 0; i < PlayerTokens.Length; i++)
                 {
-                    positi = posi;
-                    _actMan.ShowPanel(true);
+                    Vector2 tempPosi = PlayerTokens[i].Type.gameObject.transform.position;
+                    tempPosi = new Vector2(-(tempPosi.y - 4), tempPosi.x + 8);
+
+                    if (posi == tempPosi && PlayerTokens[i].Type.gameObject.activeSelf)
+                    {
+                        positi = posi;
+                        _currentActivePlayer = (PlayerToken)PlayerTokens[i].Type;
+                        _actMan.ShowPanel(true, _currentActivePlayer);
+                    }
                 }
                 
                 //check if click on enemy tile
@@ -87,7 +100,7 @@ public class TileManager : MonoBehaviour
 
             case ("Moving"):
                 
-                _actMan.ShowPanel(false);
+                _actMan.ShowPanel(false, _currentActivePlayer);
                 
                 //check if tile is in range
                 _tilesDic.TryGetValue(new Vector2(posi.y, posi.x), out Tile _Tile);
@@ -104,7 +117,7 @@ public class TileManager : MonoBehaviour
                     if (posi == tempObst)
                     {
                         //do damage to player
-                        testTokenPlayer.GetComponent<PlayerToken>().OnHpReduced(tempMisc.damage);
+                        _currentActivePlayer.OnHpReduced(tempMisc.damage);
 
                     }
                 }
@@ -128,7 +141,7 @@ public class TileManager : MonoBehaviour
 
             case ("Attacking"):
 
-                _actMan.ShowPanel(false);
+                _actMan.ShowPanel(false, _currentActivePlayer);
 
                 //check if tile is in range
                 _tilesDic.TryGetValue(new Vector2(posi.y, posi.x), out Tile _TileA);
@@ -230,15 +243,15 @@ public class TileManager : MonoBehaviour
 
     IEnumerator MoveTokenSmooth(Vector3 targetpos)
     {
-        while(testTokenPlayer.transform.position != targetpos)
+        while(_currentActivePlayer.transform.position != targetpos)
             {
-                testTokenPlayer.transform.position = Vector2.MoveTowards(
-                    testTokenPlayer.transform.position,
+                _currentActivePlayer.transform.position = Vector2.MoveTowards(
+                    _currentActivePlayer.transform.position,
                     targetpos,
                     tokenMoveSpeed * Time.deltaTime);
                 yield return 0;
             }
-            testTokenPlayer.transform.position = targetpos;
+            _currentActivePlayer.transform.position = targetpos;
 
     }
 }

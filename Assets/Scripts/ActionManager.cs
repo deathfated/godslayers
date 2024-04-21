@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,11 +10,11 @@ public class ActionManager : MonoBehaviour
     private GameObject _statsPanel;
     private GameObject _charaSprite;
 
-    public void ShowPanel(bool isShow)
+    public void ShowPanel(bool isShow, PlayerToken currPlayer)
     {
         actionPanel.gameObject.SetActive(isShow);
 
-        _charaSprite.GetComponent<RawImage>().texture = PlayerPartyManager.instance.GetTokenSprite(0).texture;
+        _charaSprite.GetComponent<RawImage>().texture = currPlayer.charaSprite.texture; //PlayerPartyManager.instance.GetTokenSprite(0).texture;
         _charaSprite.SetActive(isShow);
         SetCharaOpacity(true);
 
@@ -27,6 +24,7 @@ public class ActionManager : MonoBehaviour
     void Start()
     {
         _tileMan = GameObject.FindGameObjectWithTag("TileManager").GetComponent<TileManager>();
+        _tokenMan = gameObject.GetComponent<TokenManager>();
         _statsPanel = actionPanel.transform.GetChild(3).GetChild(1).gameObject;
         _charaSprite = actionPanel.transform.parent.GetChild(1).gameObject;
     }

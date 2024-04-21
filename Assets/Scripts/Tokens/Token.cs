@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Unity.VisualStudio.Editor;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public abstract class Token : MonoBehaviour
@@ -10,6 +11,7 @@ public abstract class Token : MonoBehaviour
     public int currHp;
     protected bool isDamageable;
     public Sprite charaSprite;
+    public AnimatorController animController;
 
     [SerializeField] protected Vector3 StartingPosition;
 
