@@ -14,8 +14,8 @@ public class TileManager : MonoBehaviour
     private TokenManager _tokenMan;
 
     private PlayerToken _currentActivePlayer;
-    [SerializeField] TokenManager.BattleTokens[] PlayerTokens;
-    [SerializeField] TokenManager.BattleTokens[] EnemyTokens;
+    //[SerializeField] TokenManager.BattleTokens[] PlayerTokens;
+    //[SerializeField] TokenManager.BattleTokens[] EnemyTokens;
     [SerializeField] MiscToken[] MiscTokens;
     [SerializeField] float tokenMoveSpeed = 10f;
 
@@ -44,8 +44,8 @@ public class TileManager : MonoBehaviour
         _actMan = _gameMan.GetComponent<ActionManager>();
         _tokenMan = _gameMan.GetComponent<TokenManager>();
 
-        PlayerTokens = _tokenMan.playerTokens;
-        EnemyTokens = _tokenMan.enemyTokens;
+        //PlayerTokens = _tokenMan.playerTokens;
+        //EnemyTokens = _tokenMan.enemyTokens;
         MiscTokens = _tokenMan.miscTokens;
     }
 
@@ -65,32 +65,33 @@ public class TileManager : MonoBehaviour
         if (_turnMan.CurrTurn != "Player") return;
 
         _actMan.ShowEnemyPanel(false);
+        _turnMan.UpdateTurnText();
         
         switch (_turnMan.PlayerState)
         {
             case ("Idle"):
                 
                 //check if click on player tile
-                for (int i = 0; i < PlayerTokens.Length; i++)
+                for (int i = 0; i < _tokenMan.playerTokens.Length; i++)
                 {
-                    Vector2 tempPosi = PlayerTokens[i].Type.gameObject.transform.position;
+                    Vector2 tempPosi = _tokenMan.playerTokens[i].Type.gameObject.transform.position;
                     tempPosi = new Vector2(-(tempPosi.y - 4), tempPosi.x + 8);
 
-                    if (posi == tempPosi && PlayerTokens[i].Type.gameObject.activeSelf)
+                    if (posi == tempPosi && _tokenMan.playerTokens[i].Type.gameObject.activeSelf)
                     {
                         positi = posi;
-                        _currentActivePlayer = (PlayerToken)PlayerTokens[i].Type;
+                        _currentActivePlayer = (PlayerToken)_tokenMan.playerTokens[i].Type;
                         _actMan.ShowPanel(true, _currentActivePlayer);
                     }
                 }
                 
                 //check if click on enemy tile
-                for(int n = 0; n < EnemyTokens.Length; n++)
+                for(int n = 0; n < _tokenMan.enemyTokens.Length; n++)
                 {
-                    Vector2 tempEnemy = EnemyTokens[n].Type.gameObject.transform.position;
+                    Vector2 tempEnemy = _tokenMan.enemyTokens[n].Type.gameObject.transform.position;
                     tempEnemy = new Vector2(-(tempEnemy.y - 4), tempEnemy.x + 8);
 
-                    if (posi == tempEnemy && EnemyTokens[n].Type.gameObject.activeSelf)
+                    if (posi == tempEnemy && _tokenMan.enemyTokens[n].Type.gameObject.activeSelf)
                     {
                         _actMan.ShowEnemyPanel(true);
                     }
@@ -117,10 +118,7 @@ public class TileManager : MonoBehaviour
                     //_lastTile.gameObject.SetActive(false); -> kinda fun potential mechanic.. collapsing tiles when move away
                 }
 
-                //check if target tile is on a damaging Misc
-                
-                //MiscToken tempMisc = testTokenMisc.GetComponent<MiscToken>();
-                
+                //check if target tile is on a damaging Misc                
                 for(int t = 0; t < MiscTokens.Length; t++ )
                 {
                     if (MiscTokens[t].isDamaging)
@@ -162,17 +160,17 @@ public class TileManager : MonoBehaviour
                 _tilesDic.TryGetValue(new Vector2(posi.y, posi.x), out Tile _TileA);
 
                 //check if click on enemy tile
-                for(int n = 0; n < EnemyTokens.Length; n++)
+                for(int n = 0; n < _tokenMan.enemyTokens.Length; n++)
                 {
-                    Vector2 tempEnemy = EnemyTokens[n].Type.gameObject.transform.position;
+                    Vector2 tempEnemy = _tokenMan.enemyTokens[n].Type.gameObject.transform.position;
                     tempEnemy = new Vector2(-(tempEnemy.y - 4), tempEnemy.x + 8);
 
-                    if(_TileA.IsAttackable && tempEnemy == posi && EnemyTokens[n].Type.gameObject.activeSelf) 
+                    if(_TileA.IsAttackable && tempEnemy == posi && _tokenMan.enemyTokens[n].Type.gameObject.activeSelf) 
                     {
                         //testTokenPlayer.GetComponent<PlayerToken>().
                         int dmg = 3;
-                        EnemyTokens[n].Type.OnHpReduced(dmg);
-                        Debug.Log(EnemyTokens[n].Name + " takes "+ dmg +" damage!");
+                        _tokenMan.enemyTokens[n].Type.OnHpReduced(dmg);
+                        Debug.Log(_tokenMan.enemyTokens[n].Name + " takes "+ dmg +" damage!");
                     }
                 }
 

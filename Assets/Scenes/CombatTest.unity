@@ -3556,6 +3556,7 @@ GameObject:
   - component: {fileID: 1332589398}
   - component: {fileID: 1332589400}
   - component: {fileID: 1332589401}
+  - component: {fileID: 1332589402}
   m_Layer: 0
   m_Name: BattleManager
   m_TagString: BattleManager
@@ -3576,6 +3577,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnText: {fileID: 1736204581}
+  stateText: {fileID: 8021335392019781521}
+  enemyTactics: {fileID: 1332589402}
   CurrTurn: 
   PlayerState: 
 --- !u!4 &1332589399
@@ -3630,6 +3633,19 @@ MonoBehaviour:
     Type: {fileID: 53469991}
   miscTokens:
   - {fileID: 960188739}
+--- !u!114 &1332589402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1332589397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b7d4004225fe804db65729e24026d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tokenMan: {fileID: 1332589401}
 --- !u!224 &1337978281 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2445892259956379420, guid: cf8ad7504d7e61040a5d6817e910f3a9, type: 3}
@@ -3744,8 +3760,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2369ab50bddb08f4d9b399d7d54777c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerTokens: []
-  EnemyTokens: []
   MiscTokens: []
   tokenMoveSpeed: 10
 --- !u!224 &1374231687 stripped
@@ -5563,11 +5577,46 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9041967646100198332, guid: 24ba90eab2b3d88459750539a827271c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041967646100198332, guid: 24ba90eab2b3d88459750539a827271c, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041967646100198332, guid: 24ba90eab2b3d88459750539a827271c, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041967646100198332, guid: 24ba90eab2b3d88459750539a827271c, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041967646100198332, guid: 24ba90eab2b3d88459750539a827271c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041967646100198332, guid: 24ba90eab2b3d88459750539a827271c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24ba90eab2b3d88459750539a827271c, type: 3}
+--- !u!114 &8021335392019781521 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3630512616561866746, guid: 24ba90eab2b3d88459750539a827271c, type: 3}
+  m_PrefabInstance: {fileID: 8021335392019781520}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

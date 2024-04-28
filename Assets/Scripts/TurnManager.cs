@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class TurnManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI turnText;
+    [SerializeField] TextMeshProUGUI stateText;
+    [SerializeField] EnemyTactics enemyTactics;
     public string CurrTurn;
     public string PlayerState;
 
@@ -17,14 +19,22 @@ public class TurnManager : MonoBehaviour
         PlayerState = "Idle"; //Idle, Moving, CheckToken, Attacking
         UpdateTurnText();
     }
+
     public void ChangeTurn(bool isFlipflop)
     {
 
         if(isFlipflop) //normal combat end turn: Player -> Enemy, vice versa
         {
-            if (CurrTurn == "Player") CurrTurn = "Enemy";
-            else if (CurrTurn == "Enemy") CurrTurn = "Player";
-
+            if (CurrTurn == "Player")
+            { 
+                CurrTurn = "Enemy";
+                enemyTactics.TestEnemyTactics();
+            }
+            else if (CurrTurn == "Enemy")
+            {
+                CurrTurn = "Player";
+            }
+            
             UpdateTurnText();
         }
         else //unusual turn: ally turn, cinematic or something
@@ -34,10 +44,10 @@ public class TurnManager : MonoBehaviour
         
     }
 
-    void UpdateTurnText()
+    public void UpdateTurnText()
     {
         turnText.text = CurrTurn;
-        //Debug.Log("Current State = " + CurrTurn);
+        stateText.text = PlayerState;
     }
 
     void GameOver()
