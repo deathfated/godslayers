@@ -237,11 +237,8 @@ public class TileManager : MonoBehaviour
 
     private void MoveToken(Vector2 posit)
     {
-        //Debug.Log("position is on : " + posi[0] + " , " + posi[1]);
-
-        //test move token to new pos
         Vector3 targetPos = new Vector3((posit[1] - 8), (-posit[0] + 4), 0f);
-        //testTokenPlayer.transform.position = targetPos; //object name is flipped with actual unity's x y 
+        //object name is flipped with actual unity's x y 
 
         StartCoroutine(MoveTokenSmooth(targetPos));
     }
@@ -296,7 +293,7 @@ public class TileManager : MonoBehaviour
                     Vector2 tempMisc = _tokenMan.miscTokens[n].gameObject.transform.position;
                     tempMisc = new Vector2(-(tempMisc.y - 4), tempMisc.x + 8);
 
-                    if (posi == tempMisc && _tokenMan.enemyTokens[n].Type.gameObject.activeSelf && _tokenMan.miscTokens[n].isOccupying)
+                    if (posi == tempMisc && _tokenMan.miscTokens[n].gameObject.activeSelf && _tokenMan.miscTokens[n].isOccupying)
                     {
                         entry.Value.IsOccupied = true;
                     }

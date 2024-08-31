@@ -1,8 +1,10 @@
-
+using UnityEngine;
 
 public class EnemyToken : Token
 {
+    [SerializeField] 
 
+    
     void Start()
     {
         Init();
@@ -20,5 +22,14 @@ public class EnemyToken : Token
         StartingPosition = transform.position;
 
     }
+
+    protected override void OnDeath()
+    {
+        base.OnDeath();
+
+
+
+    }
+
 
 }

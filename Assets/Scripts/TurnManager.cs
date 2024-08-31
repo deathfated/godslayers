@@ -54,8 +54,8 @@ public class TurnManager : MonoBehaviour
         stateText.text = PlayerState;
     }
 
-    void GameOver()
+    public void GameOver()
     {
-
+        Debug.Log("GAMEOVERRRRRRRRR");
     }
 }

@@ -1,4 +1,3 @@
-using UnityEditor.Animations;
 using UnityEngine;
 
 public class TokenManager : MonoBehaviour
@@ -38,12 +37,16 @@ public class TokenManager : MonoBehaviour
                 statToGet = enemyTokens[index].Type.currHp.ToString();
                 break;
             default:
-                statToGet = "---";
+                statToGet = "statmissing";
                 break;
         }
-            
-        return statToGet;
 
+        return statToGet;
+    }
+
+    public void OnEnemyDeath()
+    {
+        
     }
 
     void Start()
