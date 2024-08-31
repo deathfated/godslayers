@@ -11,10 +11,14 @@ public class TurnManager : MonoBehaviour
     [SerializeField] EnemyTactics enemyTactics;
     public string CurrTurn;
     public string PlayerState;
+    private TileManager _tileMan;
 
 
     void Start()
     {
+        _tileMan = GameObject.FindGameObjectWithTag("TileManager").GetComponent<TileManager>();
+        //enemyTactics.enemyTurnFinished() += ChangeTurn;
+
         CurrTurn = "Player"; //Player, Enemy
         PlayerState = "Idle"; //Idle, Moving, CheckToken, Attacking
         UpdateTurnText();
@@ -34,14 +38,14 @@ public class TurnManager : MonoBehaviour
             {
                 CurrTurn = "Player";
             }
-            
             UpdateTurnText();
         }
         else //unusual turn: ally turn, cinematic or something
         {
             
         }
-        
+
+        _tileMan.ScanOccupiedTiles();
     }
 
     public void UpdateTurnText()

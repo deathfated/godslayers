@@ -14,9 +14,7 @@ public class TileManager : MonoBehaviour
     private TokenManager _tokenMan;
 
     private PlayerToken _currentActivePlayer;
-    //[SerializeField] TokenManager.BattleTokens[] PlayerTokens;
-    //[SerializeField] TokenManager.BattleTokens[] EnemyTokens;
-    [SerializeField] MiscToken[] MiscTokens;
+
     [SerializeField] float tokenMoveSpeed = 10f;
 
     private Vector2 positi;
@@ -33,8 +31,6 @@ public class TileManager : MonoBehaviour
             for (int y = 0; y < _rows ; y++)
             {
                 Tile _grabbedTile = transform.GetChild(0).GetChild(y).GetChild(x).GetComponent<Tile>();
-
-                //_tilesDic[new Vector2(x,y)] = _grabbedTile;
                 _tilesDic.Add(new Vector2(x,y), _grabbedTile);
             }
         }
@@ -44,24 +40,14 @@ public class TileManager : MonoBehaviour
         _actMan = _gameMan.GetComponent<ActionManager>();
         _tokenMan = _gameMan.GetComponent<TokenManager>();
 
-        //PlayerTokens = _tokenMan.playerTokens;
-        //EnemyTokens = _tokenMan.enemyTokens;
-        MiscTokens = _tokenMan.miscTokens;
-    }
-
-    public Tile GetTileAtPos(Vector2 pos)
-    {
-        if(_tilesDic.TryGetValue(pos,out Tile tile))
-        {
-            return tile;
-        }
-        
-        return null;
+        ScanOccupiedTiles();
     }
 
     public void TilePressed(Vector2 posi)
     {
         
+        ScanOccupiedTiles();
+
         if (_turnMan.CurrTurn != "Player") return;
 
         _actMan.ShowEnemyPanel(false);
@@ -119,17 +105,17 @@ public class TileManager : MonoBehaviour
                 }
 
                 //check if target tile is on a damaging Misc                
-                for(int t = 0; t < MiscTokens.Length; t++ )
+                for(int t = 0; t < _tokenMan.miscTokens.Length; t++ )
                 {
-                    if (MiscTokens[t].isDamaging)
+                    if (_tokenMan.miscTokens[t].isDamaging)
                     {
-                        Vector2 tempObst = MiscTokens[t].transform.position;
+                        Vector2 tempObst = _tokenMan.miscTokens[t].transform.position;
                         tempObst = new Vector2(-(tempObst.y - 4), tempObst.x + 8);
 
                         if (posi == tempObst)
                         {
                             //do damage to player
-                            _currentActivePlayer.OnHpReduced(MiscTokens[t].damage);
+                            _currentActivePlayer.OnHpReduced(_tokenMan.miscTokens[t].damage);
 
                         }
                     }
@@ -257,7 +243,6 @@ public class TileManager : MonoBehaviour
         Vector3 targetPos = new Vector3((posit[1] - 8), (-posit[0] + 4), 0f);
         //testTokenPlayer.transform.position = targetPos; //object name is flipped with actual unity's x y 
 
-        //smooth movin
         StartCoroutine(MoveTokenSmooth(targetPos));
     }
 
@@ -273,5 +258,49 @@ public class TileManager : MonoBehaviour
             }
             _currentActivePlayer.transform.position = targetpos;
 
+    }
+
+    public void ScanOccupiedTiles()
+    {
+        foreach(KeyValuePair<Vector2,Tile> entry in _tilesDic)
+        {    
+            entry.Value.GetPositionFromName(out int row, out int col);
+            Vector2 posi = new Vector2(row, col);
+
+            entry.Value.IsOccupied = false;
+                
+                for (int i = 0; i < _tokenMan.playerTokens.Length; i++)
+                {
+                    Vector2 tempPosi = _tokenMan.playerTokens[i].Type.gameObject.transform.position;
+                    tempPosi = new Vector2(-(tempPosi.y - 4), tempPosi.x + 8);
+
+                    if (posi == tempPosi && _tokenMan.playerTokens[i].Type.gameObject.activeSelf)
+                    {
+                        entry.Value.IsOccupied = true;
+                    }
+                }
+                
+                for(int n = 0; n < _tokenMan.enemyTokens.Length; n++)
+                {
+                    Vector2 tempEnemy = _tokenMan.enemyTokens[n].Type.gameObject.transform.position;
+                    tempEnemy = new Vector2(-(tempEnemy.y - 4), tempEnemy.x + 8);
+
+                    if (posi == tempEnemy && _tokenMan.enemyTokens[n].Type.gameObject.activeSelf)
+                    {
+                        entry.Value.IsOccupied = true;
+                    }
+                }
+
+                for(int n = 0; n < _tokenMan.miscTokens.Length; n++)
+                {
+                    Vector2 tempMisc = _tokenMan.miscTokens[n].gameObject.transform.position;
+                    tempMisc = new Vector2(-(tempMisc.y - 4), tempMisc.x + 8);
+
+                    if (posi == tempMisc && _tokenMan.enemyTokens[n].Type.gameObject.activeSelf && _tokenMan.miscTokens[n].isOccupying)
+                    {
+                        entry.Value.IsOccupied = true;
+                    }
+                }
+        }
     }
 }
