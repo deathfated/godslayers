@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class EnemyToken : Token
 {
-    [SerializeField] 
-
     
     void Start()
     {
@@ -14,8 +12,8 @@ public class EnemyToken : Token
     {
         base.Init();
 
-        MaxActionPoints = 5;
-        maxHp = 8;
+        //MaxActionPoints = 5;
+        //maxHp = 8;
         currHp = maxHp;
         isDamageable = true;
 

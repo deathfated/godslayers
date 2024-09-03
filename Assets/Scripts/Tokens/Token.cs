@@ -6,6 +6,7 @@ public abstract class Token : MonoBehaviour
     public int MaxActionPoints;
     public int maxHp;
     public int currHp;
+    public int atkDamage;
     protected bool isDamageable;
     public Sprite charaSprite;
     public AnimatorController animController;

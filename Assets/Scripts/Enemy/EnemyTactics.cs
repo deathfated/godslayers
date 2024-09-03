@@ -59,7 +59,8 @@ public class EnemyTactics : MonoBehaviour
                 //attacking, check if enemy in melee range
                 if (Vector2.Distance(tempEnemy, closestPlayer) == 1 && ap >= 2)
                 {
-                    DoAttack();
+                    DoAttack(_tokenMan.playerTokens[closestIndex].Type, n);
+                    
                 }
                 //move towards target
                 else if (Vector2.Distance(tempEnemy, closestPlayer) > 1) 
@@ -71,9 +72,15 @@ public class EnemyTactics : MonoBehaviour
             }
     }
 
-    private void DoAttack()
+    private void DoAttack(Token player, int n)
     {
-        Debug.Log("Attackkkk");
+        int damage = _tokenMan.enemyTokens[n].Type.atkDamage;
+
+        Debug.Log(_tokenMan.enemyTokens[n].Name + " attacking " + player.name + 
+                    "for " + damage + " damage!");
+
+        player.OnHpReduced(damage);
+
     }
 
     private void DoMove(Vector2 closestPlayer, Vector2 tempEnemy, int n)

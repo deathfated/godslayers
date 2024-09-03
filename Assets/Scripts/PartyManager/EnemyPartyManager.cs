@@ -2,20 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerPartyManager : MonoBehaviour
+public class EnemyPartyManager : MonoBehaviour
 {
-    public static PlayerPartyManager instance;
+    public static EnemyPartyManager instance;
 
     [System.Serializable]
-    public struct PlayerTokens
+    public struct EnemyTokens
     {
         public string Name;
-        public bool isUnlocked;
-        public bool isInParty;
+        //public bool isUnlocked;
+        //public bool isInParty;
         public Token token;
     }
     
-    public PlayerTokens[] pTokens; 
+    public EnemyTokens[] eTokens; 
 
     private void Awake()
     {
@@ -27,13 +27,13 @@ public class PlayerPartyManager : MonoBehaviour
 
     public Sprite GetTokenSprite(int index)
     {
-        Sprite sprit = pTokens[index].token.charaSprite;
+        Sprite sprit = eTokens[index].token.charaSprite;
         return sprit;
     }
 
     public string GetTokenName(int index)
     {
-        return pTokens[index].Name;
+        return eTokens[index].Name;
     }
 
     public string GetTokenStat(int index, string stat)
@@ -42,10 +42,10 @@ public class PlayerPartyManager : MonoBehaviour
         switch (stat)
         {
             case("MaxHp"):
-                statToGet = pTokens[index].token.maxHp.ToString();
+                statToGet = eTokens[index].token.maxHp.ToString();
                 break;
             case("CurHp"):
-                statToGet = pTokens[index].token.currHp.ToString();
+                statToGet = eTokens[index].token.currHp.ToString();
                 break;
             default:
                 statToGet = "---";
